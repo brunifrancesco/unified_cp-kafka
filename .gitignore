@@ -1,0 +1,4 @@
+dist
+pk_kafka_module.egg-info
+*.pyc
+.idea
