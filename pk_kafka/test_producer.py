@@ -1,4 +1,4 @@
-from pk_kafka.producer import KafkaProducer
+from producer import KafkaProducer
 
 
 def handle_json_message_data(msg):

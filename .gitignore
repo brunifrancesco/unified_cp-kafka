@@ -2,3 +2,4 @@ dist
 pk_kafka_module.egg-info
 *.pyc
 .idea
+pk_kafka.egg-info
