@@ -1,6 +1,7 @@
 import json
+
+import requests
 from confluent_kafka import Producer
-from json.decoder import JSONDecodeError
 
 from pk_kafka.exceptions import MessageValueException
 
@@ -54,3 +55,25 @@ class KafkaProducer:
         # Wait for any outstanding messages to be delivered and delivery report
         # callbacks to be triggered.
         self.producer.flush()
+
+
+class _KafkaRestProducerFactory:
+    @staticmethod
+    def make(credentials):
+        s = requests.Session()
+        s.auth = credentials
+        s.headers.update({"Content-Type": "application/vnd.kafka.json.v2+json"})
+        s.headers.update({"Accept": "application/vnd.kafka.v2+json"})
+        return s
+
+
+class KafkaRestProducer:
+    def __init__(self, broker_address, credentials):
+        self.broker_address = broker_address
+        self.producer = _KafkaRestProducerFactory.make(credentials)
+
+    def publish_message(self, topic, message):
+        return self.producer.post(
+            '%s/topics/%s' % (self.broker_address, topic),
+            data=json.dumps({"records": [{"value": message}]})
+        )

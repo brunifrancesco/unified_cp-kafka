@@ -8,7 +8,7 @@ def readme():
 
 setuptools.setup(
     name="pk_kafka",
-    version="1.0.1",
+    version="1.0.2",
     author="Francesco Bruni",
     author_email="Francesco Bruni",
     description="PK Kafka module",
