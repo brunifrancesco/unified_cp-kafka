@@ -24,3 +24,8 @@ This module aims to simplify the usage of Apache Kafka via Python code.
         broker_address='127.0.1.1' # kafka broker,
     ).publish_message('topic', <a JSON serializable object>)
     
+    
+    data = [dict(element="1", ee=3) for _ in range(1000)]
+    KafkaRestProducer(
+        rest_proxy_address="http://flash.planetek.it:8080/kafka-rest-proxy")\
+        .publish_messages("test", data, parallel_processes=2, message_list_size=2)
