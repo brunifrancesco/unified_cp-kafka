@@ -5,20 +5,23 @@ def readme():
     with open('README.md') as f:
         return f.read()
 
+def requirements():
+    with open('requirements.txt') as f:
+        return f.read().splitlines()
 
 setuptools.setup(
     name="pk_kafka",
-    version="1.0.2",
+    version="1.0.4",
     author="Francesco Bruni",
     author_email="Francesco Bruni",
     description="PK Kafka module",
     long_description=readme(),
     packages=setuptools.find_packages(),
     url="",
-    install_requires=['confluent-kafka'],
+    install_requires=requirements(),
     include_package_data=True,
     package_data={
-        '': ['README.md', 'requirements.txt']
+        '': ['README.md']
     },
     classifiers=[
         "Programming Language :: Python :: 3",
