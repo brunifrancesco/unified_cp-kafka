@@ -29,3 +29,4 @@ This module aims to simplify the usage of Apache Kafka via Python code.
     KafkaRestProducer(
         rest_proxy_address="http://yourhost:8080/kafka-rest-proxy")\
         .publish_messages("test", data, parallel_processes=2, message_list_size=2)
+
