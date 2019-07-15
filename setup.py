@@ -11,7 +11,7 @@ def requirements():
 
 setuptools.setup(
     name="pk_kafka",
-    version="1.0.4",
+    version="1.1.0",
     author="Francesco Bruni",
     author_email="Francesco Bruni",
     description="PK Kafka module",
