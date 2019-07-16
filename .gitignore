@@ -3,3 +3,4 @@ pk_kafka_module.egg-info
 *.pyc
 .idea
 pk_kafka.egg-info
+pk_kafka/fake_test.py

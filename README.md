@@ -15,7 +15,12 @@ This module aims to simplify the usage of Apache Kafka via Python code.
         handle_json_message_data=True # if json messages have been passed,
         run_as_separate_thread=False # True if you want to run the consumer in a separate thread
     ).start_consumer(handle_json_message_data)
-
+    
+    KafkaConsumerRestThread(
+        topic="test",
+        server_address="myhost:8080/kafka-rest-proxy",
+        run_as_separate_thread=True
+    ).start_consumer(print)
 
     
 ## Producer
