@@ -1,5 +1,6 @@
 import json
 from functools import partial
+from itertools import chain, islice
 from multiprocessing.pool import Pool
 from typing import Iterable
 
@@ -20,20 +21,22 @@ class KafkaRestProducer:
         return item is not None and isinstance(item, int) and item > 1
 
     @staticmethod
-    def _chunks(array, n):
-        """Yield successive n-sized chunks from l."""
-        for i in range(0, len(array), n):
-            yield array[i:i + n]
+    def _evaluate_and_split_message_list_by_size(message_list_size, messages):
+        """
+        Split message iterable by chunks of size :param message_list_size
+        :param message_list_size: the chunk size
+        :param messages: the list to be splitted in chunks
+        :return the chunk as generator
+        """
+        iterator = iter(messages)
+        for first in iterator:
+            yield chain([first], islice(iterator, message_list_size - 1))
 
     def _publish_messages_in_bulk(self, topic, messages):
         return self.session.post(
             '%s/topics/%s' % (self.rest_proxy_address, topic),
             data=json.dumps({"records": [{"value": message} for message in messages]})
         )
-
-    def _evaluate_and_split_by_size(self, message_list_size, messages):
-        messages = list(self._chunks(messages, message_list_size))
-        return messages
 
     def publish_message(self, topic, message):
         return self.session.post(
@@ -50,7 +53,7 @@ class KafkaRestProducer:
             raise RestProducerConfigException()
         publish_message_with_topic = partial(self.publish_message, topic)
         if need_to_send_messages_in_bulk:
-            messages = self._evaluate_and_split_by_size(message_list_size, messages)
+            messages = self._evaluate_and_split_message_list_by_size(message_list_size, messages)
             publish_message_with_topic = partial(self._publish_messages_in_bulk, topic)
             if need_to_use_pool:
                 return Pool(parallel_processes).map(publish_message_with_topic, messages)
