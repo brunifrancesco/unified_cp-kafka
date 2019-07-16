@@ -1,12 +1,13 @@
 import json
+import threading
 import uuid
 
-from confluent_kafka import Consumer, KafkaError
+from confluent_kafka.cimpl import Consumer, KafkaError
 
-import threading
+from pk_kafka.consumers.abstract_consumer import AbstractKafkaConsumer
 
 
-class KafkaConsumerThread:
+class KafkaConsumerThread(AbstractKafkaConsumer):
     """
     Start a new Consumer Thread for consuming and processing
     Kafka based messages

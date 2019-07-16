@@ -1,4 +1,4 @@
-# Planetek Kafka Module
+# Unified Kafka Module
 
 This module aims to simplify the usage of Apache Kafka via Python code.
 
@@ -15,7 +15,12 @@ This module aims to simplify the usage of Apache Kafka via Python code.
         handle_json_message_data=True # if json messages have been passed,
         run_as_separate_thread=False # True if you want to run the consumer in a separate thread
     ).start_consumer(handle_json_message_data)
-
+    
+    KafkaConsumerRestThread(
+        topic="test",
+        server_address="myhost:8080/kafka-rest-proxy",
+        run_as_separate_thread=True
+    ).start_consumer(print)
 
     
 ## Producer
@@ -27,5 +32,6 @@ This module aims to simplify the usage of Apache Kafka via Python code.
     
     data = [dict(element="1", ee=3) for _ in range(1000)]
     KafkaRestProducer(
-        rest_proxy_address="http://flash.planetek.it:8080/kafka-rest-proxy")\
+        rest_proxy_address="http://yourhost:8080/kafka-rest-proxy")\
         .publish_messages("test", data, parallel_processes=2, message_list_size=2)
+
