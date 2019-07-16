@@ -46,7 +46,6 @@ class KafkaRestProducer:
 
     def publish_messages(self, topic, messages, parallel_processes=1, message_list_size=1):
         assert isinstance(messages, Iterable)
-        messages = list(messages)
         need_to_use_pool = self._check_for_bulk_operation(parallel_processes)
         need_to_send_messages_in_bulk = self._check_for_bulk_operation(message_list_size)
         if not need_to_send_messages_in_bulk and need_to_use_pool:
