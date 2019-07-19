@@ -12,9 +12,9 @@ from pk_kafka.producer.exceptions import RestProducerConfigException
 
 class KafkaRestProducer:
 
-    def __init__(self, rest_proxy_address, credentials=None):
+    def __init__(self, rest_proxy_address, credentials=None, verify_ssl_certificate=True):
         self.rest_proxy_address = rest_proxy_address
-        self.session = _KafkaRestProducerSessionFactory.make(credentials)
+        self.session = _KafkaRestProducerSessionFactory.make(credentials, verify_ssl_certificate)
 
     @staticmethod
     def _check_for_bulk_operation(item):
@@ -61,7 +61,7 @@ class KafkaRestProducer:
 
 class _KafkaRestProducerSessionFactory:
     @staticmethod
-    def make(credentials):
+    def make(credentials, verify_ssl_certificate):
         """
         Create the Request session object.
         Given the simplicity of this method, this object will set just few headers
@@ -73,6 +73,7 @@ class _KafkaRestProducerSessionFactory:
         if credentials:
             assert isinstance(credentials, HTTPBasicAuth)
             s.auth = credentials
+        s.verify = verify_ssl_certificate
         s.headers.update({"Content-Type": "application/vnd.kafka.json.v2+json"})
         s.headers.update({"Accept": "application/vnd.kafka.v2+json"})
         return s
