@@ -9,10 +9,11 @@ from pk_kafka.consumers.abstract_consumer import AbstractKafkaConsumer
 
 class _KakfkaRestConsumerSessionFactory:
     @staticmethod
-    def make(credentials):
+    def make(credentials, verify_ssl_certificate):
         s = requests.Session()
         if credentials:
             s.auth = credentials
+        s.verify = verify_ssl_certificate
         s.headers.update({'Accept': 'application/vnd.kafka.json.v2+json'})
         s.headers.update({'Content-Type': 'application/vnd.kafka.v2+json'})
         return s
@@ -37,6 +38,7 @@ class KafkaConsumerRestThread(AbstractKafkaConsumer):
                  topic,
                  server_address,
                  credentials=None,
+                 verify_ssl_certificate=True,
                  handle_json_message_data=True,
                  consumer_group=str(uuid.uuid1())[0:10],
                  run_as_separate_thread=False
@@ -47,7 +49,7 @@ class KafkaConsumerRestThread(AbstractKafkaConsumer):
         self.consumer_group = consumer_group
         self.run_as_separate_thread = run_as_separate_thread
 
-        self.session = _KakfkaRestConsumerSessionFactory.make(credentials)
+        self.session = _KakfkaRestConsumerSessionFactory.make(credentials, verify_ssl_certificate)
         self.parameters = _KakfaRestConsumerParametersFactory.make(self.server_address, self.consumer_group)
 
     def start_consumer(self, handle_message_function):
